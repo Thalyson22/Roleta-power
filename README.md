@@ -23,7 +23,7 @@ Tudo fica no arquivo `index.html`: não precisa instalar nada nem ter servidor.
 | `premios` | Lista de prêmios: `titulo` (ex.: `10% OFF`), `textoRoleta` (texto curto da fatia), `detalhe` (onde o desconto vale), emoji, tipo e `chance` |
 | `giros` | Giros por cliente (hoje 3). Os prêmios não se repetem |
 | `fatiasPorPremio` | Quantas vezes cada prêmio aparece na roleta (hoje 2, ou seja, 10 fatias) |
-| `abreEm` / `encerraEm` | Horários em que a roleta abre e fecha. Depois de `encerraEm` aparece "Ação encerrada" (quem já tinha girado continua vendo os prêmios) |
+| `abreEm` / `encerraEm` | Opcional: horários para a roleta abrir e fechar sozinha. Hoje os dois estão `null`, ou seja, a roleta fica sempre aberta. Se usar `encerraEm`, depois dele aparece "Ação encerrada" (quem já tinha girado continua vendo os prêmios) |
 | `REGRAS` | Textos da seção "Regras da ação" |
 
 As cores ficam no topo do `<style>`, em `:root` (`--brand`, `--gold` etc.).
