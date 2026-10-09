@@ -26,7 +26,10 @@ Tudo fica no arquivo `index.html`: não precisa instalar nada nem ter servidor.
 | `abreEm` / `encerraEm` | Opcional: horários para a roleta abrir e fechar sozinha. Hoje os dois estão `null`, ou seja, a roleta fica sempre aberta. Se usar `encerraEm`, depois dele aparece "Ação encerrada" (quem já tinha girado continua vendo os prêmios) |
 | `REGRAS` | Textos da seção "Regras da ação" |
 
-As cores ficam no topo do `<style>`, em `:root` (`--brand`, `--gold` etc.).
+Visual segue o Manual de Identidade Visual da Power NutriFit: roxo `#4E2679`, preto `#1D1D1B` e branco,
+títulos em **Bungee** e textos em Poppins (no lugar da Visby CF, que não é gratuita para web).
+As cores ficam no topo do `<style>`, em `:root` (`--brand`, `--brand-2`, `--brand-3` etc.).
+O logo e o favicon estão embutidos no `index.html` (imagens em base64), então o site continua sendo um arquivo só.
 
 ### Prêmios atuais
 
