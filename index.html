@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Roleta 10/10 | Power NutriFit</title>
-<meta name="description" content="Gire a roleta da Power NutriFit e ganhe descontos e brindes. Ação válida somente no dia 10/10!">
+<meta name="description" content="Gire a roleta da Power NutriFit e ganhe descontos de até 20%. Ação válida somente no dia 10/10!">
 <meta property="og:title" content="Roleta Premiada 10/10 | Power NutriFit">
-<meta property="og:description" content="Todo giro é premiado: descontos e brindes. Só no dia 10/10!">
+<meta property="og:description" content="Todo giro é premiado: descontos de até 20%. Só no dia 10/10!">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0b0b10">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -76,18 +76,19 @@
     display: grid;
     gap: 20px;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "hero" "wheel" "play" "rules";
+    grid-template-areas: "hero" "wheel" "play" "prizes" "rules";
   }
   .hero { grid-area: hero; text-align: center; }
   .wheel-area { grid-area: wheel; }
   .play, .result, .closed { grid-area: play; }
+  .prizes { grid-area: prizes; }
   .rules { grid-area: rules; }
 
   @media (min-width: 920px) {
     .page {
       grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
-      grid-template-rows: auto auto 1fr;
-      grid-template-areas: "wheel hero" "wheel play" "wheel rules";
+      grid-template-rows: auto auto auto 1fr;
+      grid-template-areas: "wheel hero" "wheel play" "wheel prizes" "wheel rules";
       column-gap: 56px;
       padding-top: 56px;
     }
@@ -166,13 +167,14 @@
     font-family: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
     letter-spacing: 1px;
   }
-  .slice-label.brinde {
+  .slice-label.claro {
     fill: #fff;
     paint-order: stroke;
     stroke: rgba(80, 25, 0, .35);
     stroke-width: 3px;
   }
-  .slice-label.desconto { fill: var(--gold); }
+  .slice-label.escuro { fill: var(--gold); }
+  .slice-label.sub.escuro { fill: #f1f1f5; }
 
   .bulb { fill: #fff6d0; animation: blink 1.2s steps(1) infinite; }
   .bulb.b { animation-delay: .6s; }
@@ -236,9 +238,6 @@
     color: #dcdce3;
     font-size: 12.5px;
   }
-  .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
-  .dot.desconto { background: var(--slice-dark); box-shadow: inset 0 0 0 2px var(--gold); }
-  .dot.brinde { background: var(--brand); }
 
   /* ===== Cartões ===== */
   .card {
@@ -312,7 +311,8 @@
     font-size: 34px;
   }
   .prize-name { font-family: "Bebas Neue", Impact, sans-serif; font-size: 34px; line-height: 1; letter-spacing: 1px; }
-  .prize-rule { margin-top: 4px; color: #d6d6de; font-size: 13.5px; }
+  .prize-detail { margin-top: 2px; color: #fff; font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+  .prize-rule { margin-top: 4px; color: var(--muted); font-size: 13px; }
   .code-box {
     margin: 16px 0;
     padding: 10px 14px;
@@ -347,6 +347,30 @@
   .closed { text-align: center; }
   .closed h2 { font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 34px; letter-spacing: 1px; }
   .closed p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+  .prizes h2 { margin-bottom: 12px; font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 28px; letter-spacing: 1px; }
+  .prize-list { display: grid; gap: 10px; padding: 0; list-style: none; }
+  .prize-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, .22);
+  }
+  .pl-emoji {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 106, 19, .16);
+    font-size: 22px;
+  }
+  .pl-title { display: block; font-family: "Bebas Neue", Impact, sans-serif; font-size: 24px; line-height: 1; letter-spacing: 1px; color: var(--gold); }
+  .pl-detail { display: block; margin-top: 2px; color: #d6d6de; font-size: 13.5px; line-height: 1.35; }
 
   .rules h2 { margin-bottom: 12px; font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 28px; letter-spacing: 1px; }
   .rules ul { display: grid; gap: 10px; padding: 0; list-style: none; }
@@ -420,6 +444,7 @@
     background-clip: text;
     color: transparent;
   }
+  .modal-detail { margin-top: 6px; color: #fff; font-size: 16px; font-weight: 600; line-height: 1.35; }
   .rule-pill {
     display: inline-block;
     margin-top: 10px;
@@ -456,22 +481,27 @@
     <div class="brand"><span aria-hidden="true">⚡</span>POWER <b>NUTRIFIT</b></div>
     <div><span class="badge">Ação especial · 10/10</span></div>
     <h1>Gire a roleta<br>e <em>ganhe!</em></h1>
-    <p class="lead">Todo giro é premiado: descontos e brindes exclusivos esperando por você.</p>
+    <p class="lead" id="lead">Todo giro é premiado: descontos exclusivos esperando por você.</p>
   </header>
 
   <section class="wheel-area" aria-label="Roleta de prêmios">
     <div class="wheel-wrap" id="wheelWrap">
       <svg id="wheel" viewBox="-285 -285 570 570" role="img">
         <defs>
-          <radialGradient id="g-brinde" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
+          <radialGradient id="g-laranja" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
             <stop offset="0" stop-color="#ffa24a"/>
             <stop offset=".6" stop-color="#ff6a13"/>
             <stop offset="1" stop-color="#e04e00"/>
           </radialGradient>
-          <radialGradient id="g-desconto" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
+          <radialGradient id="g-escuro" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
             <stop offset="0" stop-color="#34343f"/>
             <stop offset=".6" stop-color="#1f1f29"/>
             <stop offset="1" stop-color="#121218"/>
+          </radialGradient>
+          <radialGradient id="g-vermelho" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
+            <stop offset="0" stop-color="#ff6a4a"/>
+            <stop offset=".6" stop-color="#d9361c"/>
+            <stop offset="1" stop-color="#a5220f"/>
           </radialGradient>
           <radialGradient id="shade" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
             <stop offset=".72" stop-color="#000" stop-opacity="0"/>
@@ -510,10 +540,7 @@
       </svg>
       <button class="hub" id="hubBtn" type="button" aria-label="Girar a roleta">Girar</button>
     </div>
-    <div class="legend">
-      <span class="chip"><i class="dot desconto"></i><span>Desconto: vale na compra atual</span></span>
-      <span class="chip"><i class="dot brinde"></i><span id="legendBrinde">Brinde: compras acima de R$ 100</span></span>
-    </div>
+    <div class="legend" id="legend"></div>
   </section>
 
   <section class="card play" id="playCard">
@@ -530,6 +557,7 @@
       <div class="prize-emoji" id="resultEmoji"></div>
       <div>
         <div class="prize-name" id="resultName"></div>
+        <p class="prize-detail" id="resultDetail"></p>
         <p class="prize-rule" id="resultRule"></p>
       </div>
     </div>
@@ -543,6 +571,11 @@
   <section class="card closed" id="closedCard" hidden>
     <h2 id="closedTitle">🔒 Ação encerrada</h2>
     <p id="closedText">A Roleta 10/10 já terminou. Obrigado por participar! Fique de olho nas próximas ações da Power NutriFit.</p>
+  </section>
+
+  <section class="card prizes">
+    <h2>Prêmios da roleta</h2>
+    <ul class="prize-list" id="prizeList"></ul>
   </section>
 
   <section class="card rules">
@@ -559,6 +592,7 @@
     <p class="eyebrow" id="modalHello"></p>
     <p class="modal-won">Você ganhou</p>
     <div class="modal-prize" id="modalPrize"></div>
+    <p class="modal-detail" id="modalDetail"></p>
     <div class="rule-pill" id="modalRule"></div>
     <div class="code-box"><small>Seu código</small><b id="modalCode"></b></div>
     <a class="btn-whats" id="modalWhats" target="_blank" rel="noopener">
@@ -591,43 +625,56 @@ const CONFIG = {
   abreEm: null,
   encerraEm: "2026-10-10T23:59:59-03:00",
 
-  valorMinimoBrinde: "R$ 100,00",
   prefixoCodigo: "PWR1010",
 
+  // Quantas vezes cada prêmio aparece na roleta (2 = cada prêmio em 2 fatias, roleta mais cheia).
+  // Não muda a chance de cada prêmio.
+  fatiasPorPremio: 2,
+
+  // Só é usado se algum prêmio for do tipo "brinde".
+  valorMinimoBrinde: "R$ 100,00",
+
   // Prêmios na ordem em que aparecem na roleta (sentido horário).
-  // roleta = texto curto na fatia | nome = como aparece no prêmio e no WhatsApp
-  // tipo = "desconto" (vale na compra atual) ou "brinde" (compras acima do valor mínimo)
-  // chance = peso do sorteio (quanto maior, mais sai). Não precisa somar 100.
+  // id          = identificador único (não mude depois que a ação começar)
+  // titulo      = texto grande (na fatia, no prêmio e no WhatsApp)
+  // textoRoleta = texto pequeno da fatia (curto!)
+  // detalhe     = onde o prêmio vale (aparece no prêmio, na lista e no WhatsApp)
+  // tipo        = "desconto" (vale na compra atual) ou "brinde" (compras acima do valor mínimo)
+  // chance      = peso do sorteio (quanto maior, mais sai). Não precisa somar 100.
   premios: [
-    { roleta: "BARRINHA",     nome: "Barrinha de proteína", emoji: "🍫", tipo: "brinde",   chance: 25 },
-    { roleta: "7% OFF",       nome: "7% de desconto",       emoji: "🏷️", tipo: "desconto", chance: 22 },
-    { roleta: "PRÉ-TREINO",   nome: "Dose de pré-treino",   emoji: "⚡", tipo: "brinde",   chance: 12 },
-    { roleta: "10% OFF",      nome: "10% de desconto",      emoji: "🏷️", tipo: "desconto", chance: 15 },
-    { roleta: "TERMOGÊNICO",  nome: "Termogênico",          emoji: "🔥", tipo: "brinde",   chance: 3 },
-    { roleta: "5% OFF",       nome: "5% de desconto",       emoji: "🏷️", tipo: "desconto", chance: 15 },
-    { roleta: "COQUETELEIRA", nome: "Coqueteleira",         emoji: "🥤", tipo: "brinde",   chance: 6 },
-    { roleta: "15% OFF",      nome: "15% de desconto",      emoji: "💎", tipo: "desconto", chance: 2 },
+    { id: "coffee",     titulo: "10% OFF", textoRoleta: "COFFEES",         detalhe: "em todos os coffees funcionais",                                emoji: "☕", tipo: "desconto", chance: 20 },
+    { id: "evorox",     titulo: "15% OFF", textoRoleta: "EVOROX",          detalhe: "em todos os produtos Evorox",                                   emoji: "💪", tipo: "desconto", chance: 20 },
+    { id: "pretreino",  titulo: "10% OFF", textoRoleta: "PRÉ-TREINO",      detalhe: "em qualquer pré-treino",                                        emoji: "⚡", tipo: "desconto", chance: 20 },
+    { id: "kit-evorox", titulo: "20% OFF", textoRoleta: "KIT EVOROX + 1",  detalhe: "no kit com 1 produto Evorox + 1 produto de qualquer outra marca", emoji: "🛍️", tipo: "desconto", chance: 20 },
+    { id: "kit-bfire",  titulo: "10% OFF", textoRoleta: "B-FIRE + B-SLIM", detalhe: "no kit B-Fire + B-Slim",                                        emoji: "🔥", tipo: "desconto", chance: 20 },
   ],
 };
 
+const TEM_BRINDE = CONFIG.premios.some((p) => p.tipo === "brinde");
+
 const REGRAS = [
   `<b>1 giro por cliente.</b> O prêmio fica vinculado ao seu número de WhatsApp.`,
-  `<b>Descontos</b> valem para a compra atual, feita no dia ${CONFIG.dataCurta}.`,
-  `<b>Brindes</b> são liberados em compras acima de <b>${CONFIG.valorMinimoBrinde}</b>.`,
+  `<b>O desconto vale para a compra atual</b>, feita no dia ${CONFIG.dataCurta}, somente nos produtos indicados no prêmio.`,
+  `Nos prêmios de <b>kit</b>, o desconto vale para o kit completo (os 2 produtos).`,
+  ...(TEM_BRINDE ? [`<b>Brindes</b> são liberados em compras acima de <b>${CONFIG.valorMinimoBrinde}</b>, enquanto durarem os estoques.`] : []),
   `Para resgatar, toque em <b>Resgatar no WhatsApp</b> e envie a mensagem com o seu código.`,
-  `Válido somente em <b>${CONFIG.dataCompleta}</b>. Prêmios não são cumulativos com outras promoções nem trocáveis por dinheiro.`,
-  `Brindes sujeitos à disponibilidade de estoque.`,
+  `Válido somente em <b>${CONFIG.dataCompleta}</b>. Não cumulativo com outras promoções e não trocável por dinheiro.`,
 ];
 
 /* ===================================================================== */
 
-const STORAGE_KEY = "roleta-power-1010";
+const STORAGE_KEY = "roleta-power-1010-v2";
 const SVGNS = "http://www.w3.org/2000/svg";
 const R = 225;
-const LABEL_FONT = 30;
-const LABEL_MAX = 96;
+// Textos das fatias: centralizados a LABEL_CX do centro; diminuem se passarem do comprimento máximo
+const LABEL_CX = 146;
+const TITLE_FONT = 34, TITLE_MAX = 112;
+const SUB_FONT = 20, SUB_MAX = 128;
 const premios = CONFIG.premios;
-const SEG = 360 / premios.length;
+// fatias[s] = índice do prêmio da fatia s
+const fatias = [];
+for (let r = 0; r < Math.max(1, CONFIG.fatiasPorPremio || 1); r++) premios.forEach((_, i) => fatias.push(i));
+const SEG = 360 / fatias.length;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const $ = (s) => document.querySelector(s);
@@ -657,6 +704,10 @@ function svg(tag, attrs, parent) {
   return n;
 }
 
+function nomeCompleto(p) {
+  return `${p.titulo} ${p.detalhe}`;
+}
+
 // Ângulo em graus, sentido horário a partir do topo
 function polar(r, deg) {
   const a = deg * Math.PI / 180;
@@ -665,31 +716,38 @@ function polar(r, deg) {
 
 /* ---------- Monta a roleta ---------- */
 function montarRoleta() {
-  premios.forEach((p, i) => {
+  const n = fatias.length;
+  fatias.forEach((pi, i) => {
+    const p = premios[pi];
     const a0 = i * SEG, a1 = (i + 1) * SEG;
     const [x0, y0] = polar(R, a0);
     const [x1, y1] = polar(R, a1);
+    // cores alternadas; se o número de fatias for ímpar, a última ganha uma 3ª cor
+    const cor = n % 2 && i === n - 1 ? "vermelho" : i % 2 ? "escuro" : "laranja";
+    const tom = cor === "escuro" ? "escuro" : "claro";
     svg("path", {
       d: `M0 0 L${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1} Z`,
-      fill: `url(#g-${p.tipo})`,
+      fill: `url(#g-${cor})`,
     }, rotor);
 
-    const g = svg("g", { transform: `rotate(${a0 + SEG / 2})` }, rotor);
-    const emoji = svg("text", {
-      x: 0, y: -198, "font-size": 28,
+    // textos no sentido do raio, lidos da borda para o centro
+    const g = svg("g", { transform: `rotate(${a0 + SEG / 2}) rotate(90)` }, rotor);
+    const titulo = svg("text", {
+      class: `slice-label title ${tom}`,
+      x: -LABEL_CX, y: -11, "font-size": TITLE_FONT,
       "text-anchor": "middle", "dominant-baseline": "central",
     }, g);
-    emoji.textContent = p.emoji;
-    const label = svg("text", {
-      class: `slice-label ${p.tipo}`,
-      transform: "rotate(90)", x: -122, y: 0, "font-size": LABEL_FONT,
+    titulo.textContent = p.titulo;
+    const sub = svg("text", {
+      class: `slice-label sub ${tom}`,
+      x: -LABEL_CX, y: 15, "font-size": SUB_FONT,
       "text-anchor": "middle", "dominant-baseline": "central",
     }, g);
-    label.textContent = p.roleta;
+    sub.textContent = p.textoRoleta;
   });
 
   // divisórias e pinos
-  premios.forEach((_, i) => {
+  fatias.forEach((_, i) => {
     const [x, y] = polar(R, i * SEG);
     svg("line", { x1: 0, y1: 0, x2: x, y2: y, stroke: "#ffc83d", "stroke-opacity": .55, "stroke-width": 2 }, rotor);
     const [px, py] = polar(214, i * SEG);
@@ -697,20 +755,23 @@ function montarRoleta() {
   });
 
   const bulbs = $("#bulbs");
-  for (let i = 0; i < 24; i++) {
-    const [x, y] = polar(238, i * 15 + 7.5);
+  const nb = n * 2 <= 32 ? n * 2 : n;
+  for (let i = 0; i < nb; i++) {
+    const [x, y] = polar(238, (i + .5) * 360 / nb);
     svg("circle", { cx: x, cy: y, r: 5.5, class: `bulb ${i % 2 ? "b" : "a"}` }, bulbs);
   }
 
-  $("#wheel").setAttribute("aria-label", "Roleta com os prêmios: " + premios.map((p) => p.nome).join(", "));
+  $("#wheel").setAttribute("aria-label", "Roleta com os prêmios: " + premios.map(nomeCompleto).join("; "));
 }
 
 function ajustarTextos() {
-  rotor.querySelectorAll(".slice-label").forEach((t) => {
-    t.setAttribute("font-size", LABEL_FONT);
+  const ajustar = (sel, font, max) => rotor.querySelectorAll(sel).forEach((t) => {
+    t.setAttribute("font-size", font);
     const len = t.getComputedTextLength();
-    if (len > LABEL_MAX) t.setAttribute("font-size", (LABEL_FONT * LABEL_MAX / len).toFixed(2));
+    if (len > max) t.setAttribute("font-size", (font * max / len).toFixed(2));
   });
+  ajustar(".slice-label.title", TITLE_FONT, TITLE_MAX);
+  ajustar(".slice-label.sub", SUB_FONT, SUB_MAX);
 }
 
 function setRotation(deg) {
@@ -797,8 +858,11 @@ function girar() {
   if (window.innerWidth < 920) wheelWrap.scrollIntoView({ behavior: "smooth", block: "center" });
 
   const idx = sortearIndice();
+  // uma das fatias desse prêmio, escolhida ao acaso
+  const opcoes = fatias.map((pi, s) => (pi === idx ? s : -1)).filter((s) => s >= 0);
+  const fatiaAlvo = opcoes[Math.floor(rand() * opcoes.length)];
   // ângulo da roleta que vai parar embaixo do ponteiro (longe das bordas da fatia)
-  const alvo = idx * SEG + SEG * (0.18 + 0.64 * rand());
+  const alvo = fatiaAlvo * SEG + SEG * (0.18 + 0.64 * rand());
   const atual = ((rotation % 360) + 360) % 360;
   const delta = (((-alvo - atual) % 360) + 360) % 360;
   const voltas = reduceMotion ? 2 : 6 + Math.floor(rand() * 2);
@@ -819,19 +883,20 @@ function girar() {
       tick();
     }
     if (t < 1) requestAnimationFrame(frame);
-    else finalizar(idx, nome);
+    else finalizar(idx, fatiaAlvo, nome);
   }
   requestAnimationFrame(frame);
 }
 
-function finalizar(idx, nome) {
+function finalizar(idx, fatia, nome) {
   spinning = false;
   bloqueado = true;
   wheelWrap.classList.remove("spinning");
   const p = premios[idx];
   const resultado = {
     nome,
-    premio: { roleta: p.roleta, nome: p.nome, emoji: p.emoji, tipo: p.tipo },
+    premio: { id: p.id, titulo: p.titulo, detalhe: p.detalhe, emoji: p.emoji, tipo: p.tipo },
+    fatia,
     codigo: gerarCodigo(),
     quando: new Date().toISOString(),
   };
@@ -841,7 +906,7 @@ function finalizar(idx, nome) {
   somVitoria();
   if (navigator.vibrate) navigator.vibrate([60, 40, 120]);
   confete();
-  $("#live").textContent = `Parabéns, ${nome}! Você ganhou ${p.nome}.`;
+  $("#live").textContent = `Parabéns, ${nome}! Você ganhou ${nomeCompleto(p)}.`;
 }
 
 /* ---------- Resultado / WhatsApp ---------- */
@@ -855,7 +920,7 @@ function mensagem(r) {
   return [
     `Olá, ${CONFIG.loja}! 🎉`,
     `Girei a *Roleta ${CONFIG.dataCurta}* e ganhei:`,
-    `${r.premio.emoji} *${r.premio.nome}*`,
+    `${r.premio.emoji} *${nomeCompleto(r.premio)}*`,
     ``,
     `👤 Nome: ${r.nome}`,
     `🎟️ Código: ${r.codigo}`,
@@ -877,7 +942,8 @@ function mostrarResultado(r, jaGirou) {
   $("#resultCard").hidden = false;
   $("#resultEyebrow").textContent = jaGirou ? `${r.nome}, você já girou! Seu prêmio:` : "Seu prêmio";
   $("#resultEmoji").textContent = r.premio.emoji;
-  $("#resultName").textContent = r.premio.nome;
+  $("#resultName").textContent = r.premio.titulo;
+  $("#resultDetail").textContent = r.premio.detalhe;
   $("#resultRule").textContent = regra(r.premio.tipo);
   $("#resultCode").textContent = r.codigo;
   $("#resultWhats").href = linkWhats(r);
@@ -888,7 +954,8 @@ let focoAnterior = null;
 function abrirModal(r) {
   $("#modalEmoji").textContent = r.premio.emoji;
   $("#modalHello").textContent = `Parabéns, ${r.nome}!`;
-  $("#modalPrize").textContent = r.premio.nome;
+  $("#modalPrize").textContent = r.premio.titulo;
+  $("#modalDetail").textContent = r.premio.detalhe;
   $("#modalRule").textContent = (r.premio.tipo === "brinde" ? "🎁 " : "🏷️ ") + regra(r.premio.tipo);
   $("#modalCode").textContent = r.codigo;
   $("#modalWhats").href = linkWhats(r);
@@ -963,13 +1030,47 @@ function confete() {
 }
 
 /* ---------- Início ---------- */
+/* ---------- Textos da página tirados da configuração ---------- */
+function montarListaPremios() {
+  const lista = $("#prizeList");
+  premios.forEach((p) => {
+    const li = document.createElement("li");
+    const emoji = document.createElement("span");
+    emoji.className = "pl-emoji";
+    emoji.textContent = p.emoji;
+    const texto = document.createElement("span");
+    const titulo = document.createElement("span");
+    titulo.className = "pl-title";
+    titulo.textContent = p.titulo;
+    const detalhe = document.createElement("span");
+    detalhe.className = "pl-detail";
+    detalhe.textContent = p.detalhe;
+    texto.append(titulo, detalhe);
+    li.append(emoji, texto);
+    lista.appendChild(li);
+  });
+
+  const legenda = $("#legend");
+  const chips = ["🏷️ Descontos valem na compra atual"];
+  if (TEM_BRINDE) chips.push(`🎁 Brindes: compras acima de ${CONFIG.valorMinimoBrinde}`);
+  chips.forEach((t) => {
+    const c = document.createElement("span");
+    c.className = "chip";
+    c.textContent = t;
+    legenda.appendChild(c);
+  });
+
+  const maior = Math.max(0, ...premios.map((p) => parseInt(p.titulo, 10) || 0));
+  if (maior > 0) $("#lead").textContent = `Todo giro é premiado: descontos de até ${maior}% esperando por você.`;
+}
+
 function iniciar() {
   montarRoleta();
   ajustarTextos();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarTextos);
 
   $("#rulesList").innerHTML = REGRAS.map((r) => `<li>${r}</li>`).join("");
-  $("#legendBrinde").textContent = `Brinde: compras acima de ${CONFIG.valorMinimoBrinde}`;
+  montarListaPremios();
   $("#footer").textContent = `© ${CONFIG.loja} · Ação válida somente em ${CONFIG.dataCompleta}`;
 
   // Para testar de novo no mesmo aparelho: abra o site com ?reset=1 no final do endereço
@@ -982,9 +1083,10 @@ function iniciar() {
   const salvo = carregar();
   if (salvo && salvo.premio) {
     bloqueado = true;
-    const i = premios.findIndex((p) => p.roleta === salvo.premio.roleta);
-    if (i >= 0) {
-      rotation = -(i * SEG + SEG / 2);
+    const i = premios.findIndex((p) => p.id === salvo.premio.id);
+    const s = fatias[salvo.fatia] === i ? salvo.fatia : fatias.indexOf(i);
+    if (i >= 0 && s >= 0) {
+      rotation = -(s * SEG + SEG / 2);
       setRotation(rotation);
     }
     mostrarResultado(salvo, true);

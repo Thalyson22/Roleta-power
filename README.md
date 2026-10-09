@@ -18,25 +18,24 @@ Tudo fica no arquivo `index.html`: não precisa instalar nada nem ter servidor.
 | Campo | O que é |
 |---|---|
 | `whatsapp` | Número da Power só com dígitos, com 55 + DDD. Ex.: `"5511987654321"` |
-| `premios` | Lista de prêmios: texto da fatia, nome, emoji, tipo (`desconto` ou `brinde`) e `chance` |
-| `valorMinimoBrinde` | Valor mínimo para liberar brindes (hoje `R$ 100,00`) |
+| `premios` | Lista de prêmios: `titulo` (ex.: `10% OFF`), `textoRoleta` (texto curto da fatia), `detalhe` (onde o desconto vale), emoji, tipo e `chance` |
+| `fatiasPorPremio` | Quantas vezes cada prêmio aparece na roleta (hoje 2, ou seja, 10 fatias) |
 | `abreEm` / `encerraEm` | Horários em que a roleta abre e fecha. Depois de `encerraEm` aparece "Ação encerrada" |
 | `REGRAS` | Textos da seção "Regras da ação" |
 
 As cores ficam no topo do `<style>`, em `:root` (`--brand`, `--gold` etc.).
 
-### Chances atuais
+### Prêmios atuais
 
-| Prêmio | Tipo | Chance |
+Todos são descontos que valem na compra atual, só nos produtos indicados.
+
+| Prêmio | Onde vale | Chance |
 |---|---|---|
-| Barrinha de proteína | brinde | 25% |
-| 7% de desconto | desconto | 22% |
-| 10% de desconto | desconto | 15% |
-| 5% de desconto | desconto | 15% |
-| Dose de pré-treino | brinde | 12% |
-| Coqueteleira | brinde | 6% |
-| Termogênico | brinde | 3% |
-| 15% de desconto | desconto | 2% |
+| 10% OFF | Todos os coffees funcionais | 20% |
+| 15% OFF | Todos os produtos Evorox | 20% |
+| 10% OFF | Qualquer pré-treino | 20% |
+| 20% OFF | Kit com 1 produto Evorox + 1 produto de qualquer outra marca | 20% |
+| 10% OFF | Kit B-Fire + B-Slim | 20% |
 
 ## Testar
 
