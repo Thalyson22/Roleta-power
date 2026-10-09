@@ -223,6 +223,7 @@
   }
   .hub:active:not(:disabled) { transform: translate(-50%, -50%) scale(.95); }
   .hub:disabled { cursor: default; }
+  .feito .hub { filter: grayscale(.6) brightness(.75); }
   .hub:disabled::after { display: none; }
   @keyframes pulse {
     0% { transform: scale(1); opacity: .9; }
@@ -689,6 +690,10 @@ const CONFIG = {
 
 // Como os prêmios não se repetem, não dá para ter mais giros do que prêmios com chance
 const sorteavel = (p) => p.tipo !== "tente" && p.chance > 0;
+// "R$" nunca fica numa linha e o valor na outra
+const semQuebraValor = (t) => String(t || "").replace(/R\$ /g, "R$\u00a0");
+CONFIG.valorMinimoBrinde = semQuebraValor(CONFIG.valorMinimoBrinde);
+CONFIG.premios.forEach((p) => { p.detalhe = semQuebraValor(p.detalhe); });
 const GIROS = Math.max(1, Math.min(CONFIG.giros || 1, CONFIG.premios.filter(sorteavel).length));
 const TEM_BRINDE = CONFIG.premios.some((p) => sorteavel(p) && p.tipo === "brinde");
 const REGRA_MAIOR = "Se dois descontos valerem para o mesmo produto, vale o maior.";
@@ -841,8 +846,9 @@ function ajustarTextos() {
 // Apaga na roleta as fatias dos prêmios que o cliente já ganhou (não saem de novo)
 function marcarGanhos() {
   const ids = estado ? estado.giros.map((g) => g.premio.id) : [];
+  const acabou = !!estado && faltam() <= 0;
   rotor.querySelectorAll(".fatia").forEach((f) => {
-    f.classList.toggle("ganho", ids.includes(f.getAttribute("data-premio")));
+    f.classList.toggle("ganho", acabou || ids.includes(f.getAttribute("data-premio")));
   });
 }
 
@@ -1089,6 +1095,9 @@ function mostrarResultado(jaGirou) {
   $("#resultCode").textContent = estado.codigo;
   $("#resultWhats").href = linkWhats();
   hubBtn.disabled = true;
+  wheelWrap.classList.add("feito");
+  hubBtn.textContent = "✓";
+  hubBtn.setAttribute("aria-label", "Roleta concluída");
 }
 
 // modo "giro": comemora o prêmio que acabou de sair | modo "resumo": todos os prêmios + código + WhatsApp
@@ -1129,9 +1138,23 @@ function abrirModal(modo) {
   preencherModal(modo);
   focoAnterior = document.activeElement;
   modal.hidden = false;
+  modal.querySelector(".modal-card").scrollTop = 0;
   requestAnimationFrame(() => modal.classList.add("show"));
   const foco = modo === "resumo" ? $("#modalWhats") : $("#modalNext");
   setTimeout(() => foco.focus({ preventScroll: true }), 50);
+  if (modo === "resumo") mostrarBotaoWhats();
+}
+
+// Em telas baixas o botão do WhatsApp fica abaixo da dobra: depois de mostrar os prêmios,
+// desliza o cartão até ele aparecer
+function mostrarBotaoWhats() {
+  setTimeout(() => {
+    if (modal.hidden || $("#modalFinalBox").hidden) return;
+    const card = modal.querySelector(".modal-card");
+    const btn = $("#modalWhats");
+    const alvo = btn.offsetTop + btn.offsetHeight + 12 - card.clientHeight;
+    if (alvo > card.scrollTop) card.scrollTo({ top: alvo, behavior: reduceMotion ? "auto" : "smooth" });
+  }, 900);
 }
 
 function proximoPasso() {
@@ -1143,6 +1166,7 @@ function proximoPasso() {
     preencherModal("resumo");
     $("#modalWhats").focus({ preventScroll: true });
     confete(120);
+    mostrarBotaoWhats();
   }
 }
 
