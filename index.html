@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Roleta 10/10 | Power NutriFit</title>
-<meta name="description" content="Gire a roleta da Power NutriFit 3 vezes e leve 3 descontos de até 20%. Ação válida somente no dia 10/10!">
+<meta name="description" content="Gire a roleta da Power NutriFit 3 vezes e leve 3 prêmios: descontos de até 20% e brinde especial. Ação válida somente no dia 10/10!">
 <meta property="og:title" content="Roleta Premiada 10/10 | Power NutriFit">
-<meta property="og:description" content="3 giros, 3 prêmios: descontos de até 20%. Só no dia 10/10!">
+<meta property="og:description" content="3 giros, 3 prêmios: descontos de até 20% e brinde especial. Só no dia 10/10!">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0b0b10">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -519,6 +519,11 @@
             <stop offset=".6" stop-color="#1f1f29"/>
             <stop offset="1" stop-color="#121218"/>
           </radialGradient>
+          <radialGradient id="g-cinza" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
+            <stop offset="0" stop-color="#6a6a76"/>
+            <stop offset=".6" stop-color="#4a4a55"/>
+            <stop offset="1" stop-color="#33333c"/>
+          </radialGradient>
           <radialGradient id="g-vermelho" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
             <stop offset="0" stop-color="#ff6a4a"/>
             <stop offset=".6" stop-color="#d9361c"/>
@@ -642,7 +647,7 @@
 const CONFIG = {
   // WhatsApp da Power: só números, com 55 + DDD. Ex.: "5511987654321".
   // Enquanto estiver vazio, o WhatsApp abre pedindo para escolher o contato.
-  whatsapp: "5589981041717",
+  whatsapp: "5589981297015",
 
   loja: "Power NutriFit",
   dataCurta: "10/10",
@@ -667,23 +672,25 @@ const CONFIG = {
 
   // Prêmios na ordem em que aparecem na roleta (sentido horário).
   // id          = identificador único (não mude depois que a ação começar)
-  // titulo      = texto grande (na fatia, no prêmio e no WhatsApp)
+  // titulo      = texto grande (no prêmio e no WhatsApp; também na fatia, se não houver tituloRoleta)
+  // tituloRoleta = (opcional) texto grande da fatia, quando o titulo é longo demais para ela
   // textoRoleta = texto pequeno da fatia (curto!)
   // detalhe     = onde o prêmio vale (aparece no prêmio, na lista e no WhatsApp)
-  // tipo        = "desconto" (vale na compra atual) ou "brinde" (compras acima do valor mínimo)
+  // tipo        = "desconto" (vale na compra atual), "brinde" (compras acima do valor mínimo)
+  //               ou "tente" (fatia de enfeite: aparece na roleta, mas NUNCA é sorteada)
   // chance      = peso do sorteio (quanto maior, mais sai). Não precisa somar 100.
   premios: [
-    { id: "coffee",     titulo: "10% OFF", textoRoleta: "COFFEES",         detalhe: "em todos os coffees funcionais",                                emoji: "☕", tipo: "desconto", chance: 20 },
-    { id: "evorox",     titulo: "15% OFF", textoRoleta: "EVOROX",          detalhe: "em todos os produtos Evorox",                                   emoji: "💪", tipo: "desconto", chance: 20 },
-    { id: "pretreino",  titulo: "10% OFF", textoRoleta: "PRÉ-TREINO",      detalhe: "em qualquer pré-treino",                                        emoji: "⚡", tipo: "desconto", chance: 20 },
-    { id: "kit-evorox", titulo: "20% OFF", textoRoleta: "KIT EVOROX + 1",  detalhe: "no kit com 1 produto Evorox + 1 produto de qualquer outra marca", emoji: "🛍️", tipo: "desconto", chance: 20 },
-    { id: "kit-bfire",  titulo: "10% OFF", textoRoleta: "B-FIRE + B-SLIM", detalhe: "no kit B-Fire + B-Slim",                                        emoji: "🔥", tipo: "desconto", chance: 20 },
+    { id: "evorox",     titulo: "15% OFF",         textoRoleta: "EVOROX",         detalhe: "em todos os produtos Evorox",                                   emoji: "💪", tipo: "desconto", chance: 20 },
+    { id: "brinde",     titulo: "BRINDE ESPECIAL", tituloRoleta: "BRINDE", textoRoleta: "ESPECIAL", detalhe: "em compras acima de R$ 100,00",               emoji: "🎁", tipo: "brinde",   chance: 20 },
+    { id: "kit-evorox", titulo: "20% OFF",         textoRoleta: "KIT EVOROX + 1", detalhe: "no kit com 1 produto Evorox + 1 produto de qualquer outra marca", emoji: "🛍️", tipo: "desconto", chance: 20 },
+    { id: "tente",      titulo: "TENTE OUTRA VEZ", tituloRoleta: "TENTE",  textoRoleta: "OUTRA VEZ", detalhe: "",                                            emoji: "🔄", tipo: "tente",    chance: 0 },
   ],
 };
 
 // Como os prêmios não se repetem, não dá para ter mais giros do que prêmios com chance
-const GIROS = Math.max(1, Math.min(CONFIG.giros || 1, CONFIG.premios.filter((p) => p.chance > 0).length));
-const TEM_BRINDE = CONFIG.premios.some((p) => p.tipo === "brinde");
+const sorteavel = (p) => p.tipo !== "tente" && p.chance > 0;
+const GIROS = Math.max(1, Math.min(CONFIG.giros || 1, CONFIG.premios.filter(sorteavel).length));
+const TEM_BRINDE = CONFIG.premios.some((p) => sorteavel(p) && p.tipo === "brinde");
 const REGRA_MAIOR = "Se dois descontos valerem para o mesmo produto, vale o maior.";
 
 const REGRAS = [
@@ -701,7 +708,7 @@ const REGRAS = [
 
 /* ===================================================================== */
 
-const STORAGE_KEY = "roleta-power-1010-v3";
+const STORAGE_KEY = "roleta-power-1010-v4";
 const SVGNS = "http://www.w3.org/2000/svg";
 const R = 225;
 // Textos das fatias: centralizados a LABEL_CX do centro; diminuem se passarem do comprimento máximo
@@ -779,8 +786,8 @@ function montarRoleta() {
     const [x0, y0] = polar(R, a0);
     const [x1, y1] = polar(R, a1);
     // cores alternadas; se o número de fatias for ímpar, a última ganha uma 3ª cor
-    const cor = n % 2 && i === n - 1 ? "vermelho" : i % 2 ? "escuro" : "laranja";
-    const tom = cor === "escuro" ? "escuro" : "claro";
+    const cor = p.tipo === "tente" ? "cinza" : n % 2 && i === n - 1 ? "vermelho" : i % 2 ? "escuro" : "laranja";
+    const tom = cor === "escuro" || cor === "cinza" ? "escuro" : "claro";
     const fatia = svg("g", { class: "fatia", "data-premio": p.id }, rotor);
     svg("path", {
       d: `M0 0 L${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1} Z`,
@@ -794,7 +801,7 @@ function montarRoleta() {
       x: -LABEL_CX, y: -11, "font-size": TITLE_FONT,
       "text-anchor": "middle", "dominant-baseline": "central",
     }, g);
-    titulo.textContent = p.titulo;
+    titulo.textContent = p.tituloRoleta || p.titulo;
     const sub = svg("text", {
       class: `slice-label sub ${tom}`,
       x: -LABEL_CX, y: 15, "font-size": SUB_FONT,
@@ -818,7 +825,7 @@ function montarRoleta() {
     svg("circle", { cx: x, cy: y, r: 5.5, class: `bulb ${i % 2 ? "b" : "a"}` }, bulbs);
   }
 
-  $("#wheel").setAttribute("aria-label", "Roleta com os prêmios: " + premios.map(nomeCompleto).join("; "));
+  $("#wheel").setAttribute("aria-label", "Roleta com os prêmios: " + premios.filter(sorteavel).map(nomeCompleto).join("; "));
 }
 
 function ajustarTextos() {
@@ -881,7 +888,7 @@ function somVitoria() {
 /* ---------- Sorteio ---------- */
 // Sorteia pelo peso (chance), sem repetir os prêmios de "excluir" (ids)
 function sortearIndice(excluir = []) {
-  const pesos = premios.map((p) => (excluir.includes(p.id) ? 0 : Math.max(0, p.chance)));
+  const pesos = premios.map((p) => (excluir.includes(p.id) || !sorteavel(p) ? 0 : p.chance));
   const total = pesos.reduce((s, w) => s + w, 0);
   let r = rand() * total;
   for (let i = 0; i < premios.length; i++) {
@@ -944,7 +951,7 @@ function girar() {
   const p = premios[idx];
   if (!estado) estado = { nome, codigo: gerarCodigo(), quando: new Date().toISOString(), giros: [] };
   estado.giros.push({
-    premio: { id: p.id, titulo: p.titulo, textoRoleta: p.textoRoleta, detalhe: p.detalhe, emoji: p.emoji, tipo: p.tipo },
+    premio: { id: p.id, titulo: p.titulo, tituloRoleta: p.tituloRoleta, textoRoleta: p.textoRoleta, detalhe: p.detalhe, emoji: p.emoji, tipo: p.tipo },
     fatia: fatiaAlvo,
     quando: new Date().toISOString(),
   });
@@ -1007,7 +1014,7 @@ function atualizarPainel(animarUltimo) {
     const g = giros[i];
     const li = el("li", g ? "slot cheio" : "slot");
     if (g && animarUltimo && i === giros.length - 1) li.classList.add("novo");
-    li.append(el("span", "slot-emoji", g ? g.premio.emoji : "🎁"), el("span", "slot-title", g ? g.premio.titulo : `${i + 1}º giro`));
+    li.append(el("span", "slot-emoji", g ? g.premio.emoji : "🎁"), el("span", "slot-title", g ? g.premio.tituloRoleta || g.premio.titulo : `${i + 1}º giro`));
     if (g) {
       // não quebra a linha dentro de "B-SLIM" nem logo depois do "+"
       const sub = el("span", "slot-sub");
@@ -1032,10 +1039,11 @@ function atualizarPainel(animarUltimo) {
 
 /* ---------- Resultado / WhatsApp ---------- */
 function regraTexto(giros) {
-  const descontos = giros.filter((g) => g.premio.tipo !== "brinde").length;
+  const brindes = giros.filter((g) => g.premio.tipo === "brinde").length;
+  const descontos = giros.length - brindes;
   const partes = [];
   if (descontos) partes.push(descontos > 1 ? "Descontos válidos na compra atual" : "Desconto válido na compra atual");
-  if (descontos < giros.length) partes.push(`Brindes em compras acima de ${CONFIG.valorMinimoBrinde}`);
+  if (brindes) partes.push(`${brindes > 1 ? "Brindes" : "Brinde"} em compras acima de ${CONFIG.valorMinimoBrinde}`);
   return partes.join(" · ");
 }
 
@@ -1267,7 +1275,7 @@ function encerrar(h) {
 /* ---------- Textos da página tirados da configuração ---------- */
 function montarTextos() {
   $("#rulesList").innerHTML = REGRAS.map((r) => `<li>${r}</li>`).join("");
-  $("#prizeList").replaceChildren(...premios.map(itemPremio));
+  $("#prizeList").replaceChildren(...premios.filter(sorteavel).map(itemPremio));
   const sub = $("#prizesSub");
   sub.textContent = GIROS > 1 ? `Você gira ${GIROS} vezes e leva ${GIROS} prêmios diferentes desta lista:` : "";
   sub.hidden = GIROS < 2;
@@ -1276,8 +1284,9 @@ function montarTextos() {
   if (TEM_BRINDE) chips.push(`🎁 Brindes: compras acima de ${CONFIG.valorMinimoBrinde}`);
   $("#legend").replaceChildren(...chips.map((t) => el("span", "chip", t)));
 
-  const maior = Math.max(0, ...premios.map((p) => parseInt(p.titulo, 10) || 0));
-  if (GIROS > 1) $("#lead").textContent = `São ${GIROS} giros e você leva os ${GIROS} prêmios que ganhar: descontos de até ${maior}%!`;
+  const maior = Math.max(0, ...premios.filter(sorteavel).map((p) => parseInt(p.titulo, 10) || 0));
+  const extra = TEM_BRINDE ? " e brinde especial" : "";
+  if (GIROS > 1) $("#lead").textContent = `São ${GIROS} giros e você leva os ${GIROS} prêmios que ganhar: descontos de até ${maior}%${extra}!`;
   else if (maior > 0) $("#lead").textContent = `Todo giro é premiado: descontos de até ${maior}% esperando por você.`;
   $("#footer").textContent = `© ${CONFIG.loja} · Ação válida somente em ${CONFIG.dataCompleta}`;
 }
