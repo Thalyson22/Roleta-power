@@ -545,7 +545,7 @@
 
   <section class="card play" id="playCard">
     <label class="field-label" for="nome">Seu nome</label>
-    <input id="nome" type="text" autocomplete="given-name" maxlength="40" placeholder="Como podemos te chamar?">
+    <input id="nome" type="text" autocomplete="given-name" maxlength="40" placeholder="Como te chamamos?">
     <p class="error" id="nomeErro" aria-live="polite"></p>
     <button class="btn-spin" id="spinBtn" type="button">Girar a roleta</button>
     <p class="hint">1 giro por cliente. Boa sorte! 🍀</p>
@@ -848,6 +848,7 @@ function lerNome() {
 
 function girar() {
   if (spinning || bloqueado) return;
+  if (foraDoHorario()) return;
   const nome = lerNome();
   if (!nome) return;
 
@@ -861,6 +862,17 @@ function girar() {
   // uma das fatias desse prêmio, escolhida ao acaso
   const opcoes = fatias.map((pi, s) => (pi === idx ? s : -1)).filter((s) => s >= 0);
   const fatiaAlvo = opcoes[Math.floor(rand() * opcoes.length)];
+  const p = premios[idx];
+  const resultado = {
+    nome,
+    premio: { id: p.id, titulo: p.titulo, detalhe: p.detalhe, emoji: p.emoji, tipo: p.tipo },
+    fatia: fatiaAlvo,
+    codigo: gerarCodigo(),
+    quando: new Date().toISOString(),
+  };
+  // salva antes de girar: recarregar a página no meio do giro não dá uma nova chance
+  salvar(resultado);
+  bloqueado = true;
   // ângulo da roleta que vai parar embaixo do ponteiro (longe das bordas da fatia)
   const alvo = fatiaAlvo * SEG + SEG * (0.18 + 0.64 * rand());
   const atual = ((rotation % 360) + 360) % 360;
@@ -883,30 +895,20 @@ function girar() {
       tick();
     }
     if (t < 1) requestAnimationFrame(frame);
-    else finalizar(idx, fatiaAlvo, nome);
+    else finalizar(resultado);
   }
   requestAnimationFrame(frame);
 }
 
-function finalizar(idx, fatia, nome) {
+function finalizar(resultado) {
   spinning = false;
-  bloqueado = true;
   wheelWrap.classList.remove("spinning");
-  const p = premios[idx];
-  const resultado = {
-    nome,
-    premio: { id: p.id, titulo: p.titulo, detalhe: p.detalhe, emoji: p.emoji, tipo: p.tipo },
-    fatia,
-    codigo: gerarCodigo(),
-    quando: new Date().toISOString(),
-  };
-  salvar(resultado);
   mostrarResultado(resultado, false);
   abrirModal(resultado);
   somVitoria();
   if (navigator.vibrate) navigator.vibrate([60, 40, 120]);
   confete();
-  $("#live").textContent = `Parabéns, ${nome}! Você ganhou ${nomeCompleto(p)}.`;
+  $("#live").textContent = `Parabéns, ${resultado.nome}! Você ganhou ${nomeCompleto(resultado.premio)}.`;
 }
 
 /* ---------- Resultado / WhatsApp ---------- */
@@ -1029,7 +1031,23 @@ function confete() {
   requestAnimationFrame(frame);
 }
 
-/* ---------- Início ---------- */
+/* ---------- Horário da ação (abreEm / encerraEm) ---------- */
+function foraDoHorario() {
+  const agora = Date.now();
+  const antes = CONFIG.abreEm && agora < Date.parse(CONFIG.abreEm);
+  const depois = CONFIG.encerraEm && agora > Date.parse(CONFIG.encerraEm);
+  if (!antes && !depois) return false;
+  bloqueado = true;
+  hubBtn.disabled = true;
+  $("#playCard").hidden = true;
+  $("#closedCard").hidden = false;
+  if (antes) {
+    $("#closedTitle").textContent = "⏳ Quase lá!";
+    $("#closedText").textContent = `A roleta abre no dia ${CONFIG.dataCurta}. Volte aqui para girar e ganhar!`;
+  }
+  return true;
+}
+
 /* ---------- Textos da página tirados da configuração ---------- */
 function montarListaPremios() {
   const lista = $("#prizeList");
@@ -1064,6 +1082,7 @@ function montarListaPremios() {
   if (maior > 0) $("#lead").textContent = `Todo giro é premiado: descontos de até ${maior}% esperando por você.`;
 }
 
+/* ---------- Início ---------- */
 function iniciar() {
   montarRoleta();
   ajustarTextos();
@@ -1091,19 +1110,7 @@ function iniciar() {
     }
     mostrarResultado(salvo, true);
   } else {
-    const agora = Date.now();
-    const antes = CONFIG.abreEm && agora < Date.parse(CONFIG.abreEm);
-    const depois = CONFIG.encerraEm && agora > Date.parse(CONFIG.encerraEm);
-    if (antes || depois) {
-      bloqueado = true;
-      hubBtn.disabled = true;
-      $("#playCard").hidden = true;
-      $("#closedCard").hidden = false;
-      if (antes) {
-        $("#closedTitle").textContent = "⏳ Quase lá!";
-        $("#closedText").textContent = `A roleta abre no dia ${CONFIG.dataCurta}. Volte aqui para girar e ganhar!`;
-      }
-    }
+    foraDoHorario();
   }
 
   hubBtn.addEventListener("click", girar);
