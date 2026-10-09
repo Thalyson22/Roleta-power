@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roleta 10/10 | Power NutriFit</title>
+<meta name="description" content="Gire a roleta da Power NutriFit e ganhe descontos e brindes. Ação válida somente no dia 10/10!">
+<meta property="og:title" content="Roleta Premiada 10/10 | Power NutriFit">
+<meta property="og:description" content="Todo giro é premiado: descontos e brindes. Só no dia 10/10!">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0b0b10">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Cores (troque aqui para as cores da marca) ===== */
+  :root {
+    --bg: #0b0b10;
+    --text: #f5f5f7;
+    --muted: #a3a3b0;
+    --line: rgba(255, 255, 255, .09);
+    --brand: #ff6a13;     /* laranja Power */
+    --brand-2: #ff9a3d;
+    --gold: #ffc83d;
+    --gold-2: #e09b12;
+    --slice-dark: #1d1d27;
+    --whats: #25d366;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Poppins, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(900px 520px at 50% -8%, rgba(255, 106, 19, .38), transparent 62%),
+      radial-gradient(600px 420px at 100% 100%, rgba(255, 200, 61, .10), transparent 60%),
+      radial-gradient(600px 420px at 0% 75%, rgba(255, 106, 19, .10), transparent 60%);
+  }
+  .bg-number {
+    position: fixed;
+    top: 2vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: min(62vw, 560px);
+    line-height: .8;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, .045);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+
+  /* ===== Layout ===== */
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: max(24px, env(safe-area-inset-top)) 16px 24px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "hero" "wheel" "play" "rules";
+  }
+  .hero { grid-area: hero; text-align: center; }
+  .wheel-area { grid-area: wheel; }
+  .play, .result, .closed { grid-area: play; }
+  .rules { grid-area: rules; }
+
+  @media (min-width: 920px) {
+    .page {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas: "wheel hero" "wheel play" "wheel rules";
+      column-gap: 56px;
+      padding-top: 56px;
+    }
+    .hero { text-align: left; }
+    .lead { margin-inline: 0 !important; }
+    .wheel-area { position: sticky; top: 32px; align-self: start; }
+  }
+
+  /* ===== Topo ===== */
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+  }
+  .brand b { font-weight: 400; color: var(--brand); }
+  .badge {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 6px 14px;
+    border: 1px solid rgba(255, 200, 61, .45);
+    background: rgba(255, 200, 61, .08);
+    color: var(--gold);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  h1 {
+    margin-top: 12px;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-weight: 400;
+    font-size: clamp(52px, 14vw, 88px);
+    line-height: .92;
+    letter-spacing: 1px;
+  }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--brand), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .lead {
+    max-width: 34ch;
+    margin: 10px auto 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  /* ===== Roleta ===== */
+  .wheel-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .wheel-wrap {
+    position: relative;
+    width: min(100%, 500px);
+    aspect-ratio: 1;
+  }
+  .wheel-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 6%;
+    border-radius: 50%;
+    box-shadow: 0 0 70px 6px rgba(255, 106, 19, .35), 0 30px 60px rgba(0, 0, 0, .65);
+  }
+  #wheel { position: relative; display: block; width: 100%; height: 100%; overflow: visible; }
+
+  .slice-label {
+    font-family: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
+    letter-spacing: 1px;
+  }
+  .slice-label.brinde {
+    fill: #fff;
+    paint-order: stroke;
+    stroke: rgba(80, 25, 0, .35);
+    stroke-width: 3px;
+  }
+  .slice-label.desconto { fill: var(--gold); }
+
+  .bulb { fill: #fff6d0; animation: blink 1.2s steps(1) infinite; }
+  .bulb.b { animation-delay: .6s; }
+  .spinning .bulb { animation-duration: .3s; }
+  .spinning .bulb.b { animation-delay: .15s; }
+  @keyframes blink { 50% { fill: #8a5a06; } }
+
+  #pointer {
+    transform-box: fill-box;
+    transform-origin: 50% 27%;
+    transition: transform .07s ease-out;
+  }
+  #pointer.tick { transform: rotate(-14deg); }
+
+  .hub {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 23%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 4px solid #2b1a00;
+    background: radial-gradient(circle at 35% 30%, #fff4c2, var(--gold) 45%, var(--gold-2));
+    box-shadow: 0 0 0 4px var(--gold), 0 8px 22px rgba(0, 0, 0, .55), inset 0 -5px 10px rgba(0, 0, 0, .22);
+    color: #2b1700;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: clamp(20px, 6.2vw, 32px);
+    letter-spacing: 1.5px;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: transform .12s;
+  }
+  .hub::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 200, 61, .7);
+    animation: pulse 1.8s ease-out infinite;
+    pointer-events: none;
+  }
+  .hub:active:not(:disabled) { transform: translate(-50%, -50%) scale(.95); }
+  .hub:disabled { cursor: default; }
+  .hub:disabled::after { display: none; }
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: .9; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+
+  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid var(--line);
+    color: #dcdce3;
+    font-size: 12.5px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .dot.desconto { background: var(--slice-dark); box-shadow: inset 0 0 0 2px var(--gold); }
+  .dot.brinde { background: var(--brand); }
+
+  /* ===== Cartões ===== */
+  .card {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .065), rgba(255, 255, 255, .025));
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .field-label { display: block; margin-bottom: 8px; color: #d6d6de; font-size: 13px; font-weight: 600; }
+  input {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, .35);
+    color: var(--text);
+    font: inherit;
+    font-size: 16px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  input::placeholder { color: #6f6f7c; }
+  input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(255, 106, 19, .2); }
+  input:disabled { opacity: .6; }
+  .error { min-height: 1.3em; margin-top: 6px; color: #ff8a65; font-size: 13px; }
+  .shake { animation: shake .4s; }
+  @keyframes shake {
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+
+  .btn-spin {
+    width: 100%;
+    height: 58px;
+    margin-top: 4px;
+    border: 0;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #ffd56a, var(--gold) 40%, #ff9a1f);
+    box-shadow: 0 10px 30px rgba(255, 150, 30, .35), inset 0 -3px 0 rgba(0, 0, 0, .18);
+    color: #2b1700;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 27px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: transform .1s, filter .2s;
+  }
+  .btn-spin:active:not(:disabled) { transform: translateY(1px) scale(.99); }
+  .btn-spin:disabled { filter: grayscale(.5) brightness(.7); cursor: not-allowed; }
+  .hint { margin-top: 10px; color: var(--muted); font-size: 12.5px; text-align: center; }
+
+  .eyebrow {
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .prize-row { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
+  .prize-emoji {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: rgba(255, 106, 19, .16);
+    font-size: 34px;
+  }
+  .prize-name { font-family: "Bebas Neue", Impact, sans-serif; font-size: 34px; line-height: 1; letter-spacing: 1px; }
+  .prize-rule { margin-top: 4px; color: #d6d6de; font-size: 13.5px; }
+  .code-box {
+    margin: 16px 0;
+    padding: 10px 14px;
+    border: 1.5px dashed rgba(255, 200, 61, .5);
+    border-radius: 12px;
+    background: rgba(255, 200, 61, .06);
+    text-align: center;
+  }
+  .code-box small { display: block; color: var(--muted); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+  .code-box b { font-family: "Bebas Neue", Impact, sans-serif; font-size: 28px; font-weight: 400; letter-spacing: 3px; color: var(--gold); }
+
+  .btn-whats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--whats);
+    box-shadow: 0 10px 30px rgba(37, 211, 102, .3);
+    color: #05290f;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform .1s, filter .2s;
+  }
+  .btn-whats:hover { filter: brightness(1.06); }
+  .btn-whats:active { transform: translateY(1px); }
+  .btn-whats svg { width: 22px; height: 22px; }
+
+  .closed { text-align: center; }
+  .closed h2 { font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 34px; letter-spacing: 1px; }
+  .closed p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+  .rules h2 { margin-bottom: 12px; font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 28px; letter-spacing: 1px; }
+  .rules ul { display: grid; gap: 10px; padding: 0; list-style: none; }
+  .rules li { position: relative; padding-left: 30px; color: #d6d6de; font-size: 14px; }
+  .rules li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 1px;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 106, 19, .18);
+    color: var(--brand);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .rules b { color: #fff; }
+
+  .foot {
+    padding: 8px 16px max(28px, env(safe-area-inset-bottom));
+    color: #6f6f7c;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  /* ===== Modal do prêmio ===== */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(5, 5, 8, .74);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .modal[hidden] { display: none; }
+  .modal.show { opacity: 1; }
+  .modal-card {
+    position: relative;
+    width: min(100%, 400px);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    padding: 28px 22px 18px;
+    border: 1px solid rgba(255, 200, 61, .3);
+    border-radius: 24px;
+    background: radial-gradient(420px 220px at 50% 0%, rgba(255, 106, 19, .38), transparent 70%), #15151d;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+    text-align: center;
+    transform: scale(.88) translateY(12px);
+    transition: transform .4s cubic-bezier(.2, 1.4, .4, 1);
+  }
+  .modal.show .modal-card { transform: none; }
+  .modal-emoji { font-size: 66px; line-height: 1.1; filter: drop-shadow(0 6px 18px rgba(255, 150, 30, .5)); }
+  .modal .eyebrow { margin-top: 10px; }
+  .modal-won { color: #d6d6de; font-size: 15px; }
+  .modal-prize {
+    margin-top: 2px;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: clamp(40px, 12vw, 52px);
+    line-height: 1;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, var(--brand-2), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .rule-pill {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .07);
+    border: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .link-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .tiny { margin-top: 4px; color: #77778a; font-size: 11.5px; }
+
+  #confetti { position: fixed; inset: 0; z-index: 60; width: 100%; height: 100%; pointer-events: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hub::after, .bulb { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-number" aria-hidden="true">10/10</div>
+
+<main class="page">
+  <header class="hero">
+    <div class="brand"><span aria-hidden="true">⚡</span>POWER <b>NUTRIFIT</b></div>
+    <div><span class="badge">Ação especial · 10/10</span></div>
+    <h1>Gire a roleta<br>e <em>ganhe!</em></h1>
+    <p class="lead">Todo giro é premiado: descontos e brindes exclusivos esperando por você.</p>
+  </header>
+
+  <section class="wheel-area" aria-label="Roleta de prêmios">
+    <div class="wheel-wrap" id="wheelWrap">
+      <svg id="wheel" viewBox="-285 -285 570 570" role="img">
+        <defs>
+          <radialGradient id="g-brinde" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
+            <stop offset="0" stop-color="#ffa24a"/>
+            <stop offset=".6" stop-color="#ff6a13"/>
+            <stop offset="1" stop-color="#e04e00"/>
+          </radialGradient>
+          <radialGradient id="g-desconto" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
+            <stop offset="0" stop-color="#34343f"/>
+            <stop offset=".6" stop-color="#1f1f29"/>
+            <stop offset="1" stop-color="#121218"/>
+          </radialGradient>
+          <radialGradient id="shade" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="225">
+            <stop offset=".72" stop-color="#000" stop-opacity="0"/>
+            <stop offset="1" stop-color="#000" stop-opacity=".35"/>
+          </radialGradient>
+          <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fff1b0"/>
+            <stop offset=".25" stop-color="#ffc83d"/>
+            <stop offset=".5" stop-color="#c98a10"/>
+            <stop offset=".75" stop-color="#ffd86b"/>
+            <stop offset="1" stop-color="#a66e05"/>
+          </linearGradient>
+          <linearGradient id="pointerGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff3c4"/>
+            <stop offset=".5" stop-color="#ffc83d"/>
+            <stop offset="1" stop-color="#d68a00"/>
+          </linearGradient>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="drop" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000" flood-opacity=".5"/>
+          </filter>
+        </defs>
+        <g id="rotor"></g>
+        <circle r="225" fill="url(#shade)" pointer-events="none"/>
+        <circle r="238" fill="none" stroke="url(#rim)" stroke-width="26"/>
+        <circle r="251" fill="none" stroke="#3a2600" stroke-width="2"/>
+        <circle r="225" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="3"/>
+        <g id="bulbs" filter="url(#glow)"></g>
+        <g id="pointer" filter="url(#drop)">
+          <path d="M0 -208 L-17 -252 A19 19 0 1 1 17 -252 Z" fill="url(#pointerGrad)" stroke="#6b4200" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="0" cy="-260" r="6.5" fill="#e2401c" stroke="#6b4200" stroke-width="1.5"/>
+        </g>
+      </svg>
+      <button class="hub" id="hubBtn" type="button" aria-label="Girar a roleta">Girar</button>
+    </div>
+    <div class="legend">
+      <span class="chip"><i class="dot desconto"></i><span>Desconto: vale na compra atual</span></span>
+      <span class="chip"><i class="dot brinde"></i><span id="legendBrinde">Brinde: compras acima de R$ 100</span></span>
+    </div>
+  </section>
+
+  <section class="card play" id="playCard">
+    <label class="field-label" for="nome">Seu nome</label>
+    <input id="nome" type="text" autocomplete="given-name" maxlength="40" placeholder="Como podemos te chamar?">
+    <p class="error" id="nomeErro" aria-live="polite"></p>
+    <button class="btn-spin" id="spinBtn" type="button">Girar a roleta</button>
+    <p class="hint">1 giro por cliente. Boa sorte! 🍀</p>
+  </section>
+
+  <section class="card result" id="resultCard" hidden>
+    <p class="eyebrow" id="resultEyebrow">Seu prêmio</p>
+    <div class="prize-row">
+      <div class="prize-emoji" id="resultEmoji"></div>
+      <div>
+        <div class="prize-name" id="resultName"></div>
+        <p class="prize-rule" id="resultRule"></p>
+      </div>
+    </div>
+    <div class="code-box"><small>Seu código</small><b id="resultCode"></b></div>
+    <a class="btn-whats" id="resultWhats" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.66 15l-1.3 4.76 4.88-1.28A10 10 0 1 0 12 2Zm0 2a8 8 0 1 1-4.1 14.87l-.3-.18-2.9.76.78-2.82-.2-.31A8 8 0 0 1 12 4Zm-3.1 3.6c-.2 0-.5.07-.77.37-.26.3-1 .98-1 2.4 0 1.4 1.03 2.77 1.17 2.96.15.2 2 3.2 4.93 4.36 2.44.96 2.94.77 3.47.72.53-.05 1.7-.7 1.95-1.37.24-.67.24-1.25.17-1.37-.08-.12-.27-.2-.57-.34-.3-.15-1.7-.84-1.97-.94-.26-.1-.46-.15-.65.15-.2.3-.75.94-.92 1.13-.17.2-.34.22-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.64-1.6-.9-2.18-.23-.55-.47-.48-.65-.49h-.55Z"/></svg>
+      Resgatar no WhatsApp
+    </a>
+  </section>
+
+  <section class="card closed" id="closedCard" hidden>
+    <h2 id="closedTitle">🔒 Ação encerrada</h2>
+    <p id="closedText">A Roleta 10/10 já terminou. Obrigado por participar! Fique de olho nas próximas ações da Power NutriFit.</p>
+  </section>
+
+  <section class="card rules">
+    <h2>Regras da ação</h2>
+    <ul id="rulesList"></ul>
+  </section>
+</main>
+
+<footer class="foot" id="footer"></footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalPrize" hidden>
+  <div class="modal-card">
+    <div class="modal-emoji" id="modalEmoji"></div>
+    <p class="eyebrow" id="modalHello"></p>
+    <p class="modal-won">Você ganhou</p>
+    <div class="modal-prize" id="modalPrize"></div>
+    <div class="rule-pill" id="modalRule"></div>
+    <div class="code-box"><small>Seu código</small><b id="modalCode"></b></div>
+    <a class="btn-whats" id="modalWhats" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.66 15l-1.3 4.76 4.88-1.28A10 10 0 1 0 12 2Zm0 2a8 8 0 1 1-4.1 14.87l-.3-.18-2.9.76.78-2.82-.2-.31A8 8 0 0 1 12 4Zm-3.1 3.6c-.2 0-.5.07-.77.37-.26.3-1 .98-1 2.4 0 1.4 1.03 2.77 1.17 2.96.15.2 2 3.2 4.93 4.36 2.44.96 2.94.77 3.47.72.53-.05 1.7-.7 1.95-1.37.24-.67.24-1.25.17-1.37-.08-.12-.27-.2-.57-.34-.3-.15-1.7-.84-1.97-.94-.26-.1-.46-.15-.65.15-.2.3-.75.94-.92 1.13-.17.2-.34.22-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.64-1.6-.9-2.18-.23-.55-.47-.48-.65-.49h-.55Z"/></svg>
+      Resgatar no WhatsApp
+    </a>
+    <button class="link-btn" id="modalClose" type="button">Fechar</button>
+    <p class="tiny" id="modalTiny"></p>
+  </div>
+</div>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="sr-only" aria-live="assertive" id="live"></div>
+
+<script>
+/* =====================================================================
+   CONFIGURAÇÃO — edite só esta parte
+   ===================================================================== */
+const CONFIG = {
+  // WhatsApp da Power: só números, com 55 + DDD. Ex.: "5511987654321".
+  // Enquanto estiver vazio, o WhatsApp abre pedindo para escolher o contato.
+  whatsapp: "",
+
+  loja: "Power NutriFit",
+  dataCurta: "10/10",
+  dataCompleta: "10/10/2026",
+
+  // A roleta abre/fecha nesses horários (horário de Brasília, -03:00).
+  // abreEm: null = já está aberta (bom para testar antes do dia).
+  abreEm: null,
+  encerraEm: "2026-10-10T23:59:59-03:00",
+
+  valorMinimoBrinde: "R$ 100,00",
+  prefixoCodigo: "PWR1010",
+
+  // Prêmios na ordem em que aparecem na roleta (sentido horário).
+  // roleta = texto curto na fatia | nome = como aparece no prêmio e no WhatsApp
+  // tipo = "desconto" (vale na compra atual) ou "brinde" (compras acima do valor mínimo)
+  // chance = peso do sorteio (quanto maior, mais sai). Não precisa somar 100.
+  premios: [
+    { roleta: "BARRINHA",     nome: "Barrinha de proteína", emoji: "🍫", tipo: "brinde",   chance: 25 },
+    { roleta: "7% OFF",       nome: "7% de desconto",       emoji: "🏷️", tipo: "desconto", chance: 22 },
+    { roleta: "PRÉ-TREINO",   nome: "Dose de pré-treino",   emoji: "⚡", tipo: "brinde",   chance: 12 },
+    { roleta: "10% OFF",      nome: "10% de desconto",      emoji: "🏷️", tipo: "desconto", chance: 15 },
+    { roleta: "TERMOGÊNICO",  nome: "Termogênico",          emoji: "🔥", tipo: "brinde",   chance: 3 },
+    { roleta: "5% OFF",       nome: "5% de desconto",       emoji: "🏷️", tipo: "desconto", chance: 15 },
+    { roleta: "COQUETELEIRA", nome: "Coqueteleira",         emoji: "🥤", tipo: "brinde",   chance: 6 },
+    { roleta: "15% OFF",      nome: "15% de desconto",      emoji: "💎", tipo: "desconto", chance: 2 },
+  ],
+};
+
+const REGRAS = [
+  `<b>1 giro por cliente.</b> O prêmio fica vinculado ao seu número de WhatsApp.`,
+  `<b>Descontos</b> valem para a compra atual, feita no dia ${CONFIG.dataCurta}.`,
+  `<b>Brindes</b> são liberados em compras acima de <b>${CONFIG.valorMinimoBrinde}</b>.`,
+  `Para resgatar, toque em <b>Resgatar no WhatsApp</b> e envie a mensagem com o seu código.`,
+  `Válido somente em <b>${CONFIG.dataCompleta}</b>. Prêmios não são cumulativos com outras promoções nem trocáveis por dinheiro.`,
+  `Brindes sujeitos à disponibilidade de estoque.`,
+];
+
+/* ===================================================================== */
+
+const STORAGE_KEY = "roleta-power-1010";
+const SVGNS = "http://www.w3.org/2000/svg";
+const R = 225;
+const LABEL_FONT = 30;
+const LABEL_MAX = 96;
+const premios = CONFIG.premios;
+const SEG = 360 / premios.length;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const $ = (s) => document.querySelector(s);
+const rotor = $("#rotor");
+const pointer = $("#pointer");
+const wheelWrap = $("#wheelWrap");
+const hubBtn = $("#hubBtn");
+const spinBtn = $("#spinBtn");
+const nomeInput = $("#nome");
+const nomeErro = $("#nomeErro");
+const modal = $("#modal");
+
+let rotation = 0;
+let spinning = false;
+let bloqueado = false;
+
+function rand() {
+  const a = new Uint32Array(1);
+  crypto.getRandomValues(a);
+  return a[0] / 4294967296;
+}
+
+function svg(tag, attrs, parent) {
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(n);
+  return n;
+}
+
+// Ângulo em graus, sentido horário a partir do topo
+function polar(r, deg) {
+  const a = deg * Math.PI / 180;
+  return [r * Math.sin(a), -r * Math.cos(a)];
+}
+
+/* ---------- Monta a roleta ---------- */
+function montarRoleta() {
+  premios.forEach((p, i) => {
+    const a0 = i * SEG, a1 = (i + 1) * SEG;
+    const [x0, y0] = polar(R, a0);
+    const [x1, y1] = polar(R, a1);
+    svg("path", {
+      d: `M0 0 L${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1} Z`,
+      fill: `url(#g-${p.tipo})`,
+    }, rotor);
+
+    const g = svg("g", { transform: `rotate(${a0 + SEG / 2})` }, rotor);
+    const emoji = svg("text", {
+      x: 0, y: -198, "font-size": 28,
+      "text-anchor": "middle", "dominant-baseline": "central",
+    }, g);
+    emoji.textContent = p.emoji;
+    const label = svg("text", {
+      class: `slice-label ${p.tipo}`,
+      transform: "rotate(90)", x: -122, y: 0, "font-size": LABEL_FONT,
+      "text-anchor": "middle", "dominant-baseline": "central",
+    }, g);
+    label.textContent = p.roleta;
+  });
+
+  // divisórias e pinos
+  premios.forEach((_, i) => {
+    const [x, y] = polar(R, i * SEG);
+    svg("line", { x1: 0, y1: 0, x2: x, y2: y, stroke: "#ffc83d", "stroke-opacity": .55, "stroke-width": 2 }, rotor);
+    const [px, py] = polar(214, i * SEG);
+    svg("circle", { cx: px, cy: py, r: 4.5, fill: "#ffd86b", stroke: "#6b4200", "stroke-width": 1 }, rotor);
+  });
+
+  const bulbs = $("#bulbs");
+  for (let i = 0; i < 24; i++) {
+    const [x, y] = polar(238, i * 15 + 7.5);
+    svg("circle", { cx: x, cy: y, r: 5.5, class: `bulb ${i % 2 ? "b" : "a"}` }, bulbs);
+  }
+
+  $("#wheel").setAttribute("aria-label", "Roleta com os prêmios: " + premios.map((p) => p.nome).join(", "));
+}
+
+function ajustarTextos() {
+  rotor.querySelectorAll(".slice-label").forEach((t) => {
+    t.setAttribute("font-size", LABEL_FONT);
+    const len = t.getComputedTextLength();
+    if (len > LABEL_MAX) t.setAttribute("font-size", (LABEL_FONT * LABEL_MAX / len).toFixed(2));
+  });
+}
+
+function setRotation(deg) {
+  rotor.setAttribute("transform", `rotate(${deg})`);
+}
+
+/* ---------- Sons (gerados no navegador, sem arquivos) ---------- */
+let audioCtx = null;
+function ligarAudio() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
+  if (!audioCtx) audioCtx = new AC();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+}
+function beep(freq, dur, vol, when = 0, type = "triangle") {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime + when;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type;
+  o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g).connect(audioCtx.destination);
+  o.start(t);
+  o.stop(t + dur + 0.02);
+}
+let ultimoTick = 0;
+function tick() {
+  const now = performance.now();
+  if (now - ultimoTick < 40) return;
+  ultimoTick = now;
+  beep(1500, 0.03, 0.05, 0, "square");
+  pointer.classList.add("tick");
+  setTimeout(() => pointer.classList.remove("tick"), 70);
+}
+function somVitoria() {
+  [523, 659, 784, 1047].forEach((f, i) => beep(f, 0.22, 0.09, i * 0.11));
+  [523, 784, 1047].forEach((f) => beep(f, 0.7, 0.05, 0.48));
+}
+
+/* ---------- Sorteio ---------- */
+function sortearIndice() {
+  const total = premios.reduce((s, p) => s + Math.max(0, p.chance), 0);
+  let r = rand() * total;
+  for (let i = 0; i < premios.length; i++) {
+    r -= Math.max(0, premios[i].chance);
+    if (r < 0) return i;
+  }
+  return premios.length - 1;
+}
+
+function gerarCodigo() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for (let i = 0; i < 4; i++) s += chars[Math.floor(rand() * chars.length)];
+  return `${CONFIG.prefixoCodigo}-${s}`;
+}
+
+function lerNome() {
+  const v = nomeInput.value.trim().replace(/\s+/g, " ");
+  if (v.length >= 2) {
+    nomeErro.textContent = "";
+    return v;
+  }
+  nomeErro.textContent = "Digite seu nome para girar 😉";
+  nomeInput.classList.remove("shake");
+  void nomeInput.offsetWidth;
+  nomeInput.classList.add("shake");
+  nomeInput.focus({ preventScroll: true });
+  nomeInput.scrollIntoView({ behavior: "smooth", block: "center" });
+  return null;
+}
+
+function girar() {
+  if (spinning || bloqueado) return;
+  const nome = lerNome();
+  if (!nome) return;
+
+  spinning = true;
+  hubBtn.disabled = spinBtn.disabled = nomeInput.disabled = true;
+  wheelWrap.classList.add("spinning");
+  ligarAudio();
+  if (window.innerWidth < 920) wheelWrap.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  const idx = sortearIndice();
+  // ângulo da roleta que vai parar embaixo do ponteiro (longe das bordas da fatia)
+  const alvo = idx * SEG + SEG * (0.18 + 0.64 * rand());
+  const atual = ((rotation % 360) + 360) % 360;
+  const delta = (((-alvo - atual) % 360) + 360) % 360;
+  const voltas = reduceMotion ? 2 : 6 + Math.floor(rand() * 2);
+  const inicio = rotation;
+  const fim = rotation + voltas * 360 + delta;
+  const duracao = reduceMotion ? 2200 : 6200;
+  let ultimaFatia = Math.floor(inicio / SEG);
+  const t0 = performance.now();
+
+  function frame(now) {
+    const t = Math.min(1, (now - t0) / duracao);
+    const e = 1 - Math.pow(1 - t, 4);
+    rotation = inicio + (fim - inicio) * e;
+    setRotation(rotation);
+    const fatia = Math.floor(rotation / SEG);
+    if (fatia !== ultimaFatia) {
+      ultimaFatia = fatia;
+      tick();
+    }
+    if (t < 1) requestAnimationFrame(frame);
+    else finalizar(idx, nome);
+  }
+  requestAnimationFrame(frame);
+}
+
+function finalizar(idx, nome) {
+  spinning = false;
+  bloqueado = true;
+  wheelWrap.classList.remove("spinning");
+  const p = premios[idx];
+  const resultado = {
+    nome,
+    premio: { roleta: p.roleta, nome: p.nome, emoji: p.emoji, tipo: p.tipo },
+    codigo: gerarCodigo(),
+    quando: new Date().toISOString(),
+  };
+  salvar(resultado);
+  mostrarResultado(resultado, false);
+  abrirModal(resultado);
+  somVitoria();
+  if (navigator.vibrate) navigator.vibrate([60, 40, 120]);
+  confete();
+  $("#live").textContent = `Parabéns, ${nome}! Você ganhou ${p.nome}.`;
+}
+
+/* ---------- Resultado / WhatsApp ---------- */
+function regra(tipo) {
+  return tipo === "brinde"
+    ? `Brinde válido em compras acima de ${CONFIG.valorMinimoBrinde}`
+    : "Desconto válido na compra atual";
+}
+
+function mensagem(r) {
+  return [
+    `Olá, ${CONFIG.loja}! 🎉`,
+    `Girei a *Roleta ${CONFIG.dataCurta}* e ganhei:`,
+    `${r.premio.emoji} *${r.premio.nome}*`,
+    ``,
+    `👤 Nome: ${r.nome}`,
+    `🎟️ Código: ${r.codigo}`,
+    `📌 ${regra(r.premio.tipo)} (somente em ${CONFIG.dataCompleta}).`,
+    ``,
+    `Quero resgatar meu prêmio!`,
+  ].join("\n");
+}
+
+function linkWhats(r) {
+  const numero = CONFIG.whatsapp.replace(/\D/g, "");
+  const texto = encodeURIComponent(mensagem(r));
+  return numero ? `https://wa.me/${numero}?text=${texto}` : `https://wa.me/?text=${texto}`;
+}
+
+function mostrarResultado(r, jaGirou) {
+  $("#playCard").hidden = true;
+  $("#closedCard").hidden = true;
+  $("#resultCard").hidden = false;
+  $("#resultEyebrow").textContent = jaGirou ? `${r.nome}, você já girou! Seu prêmio:` : "Seu prêmio";
+  $("#resultEmoji").textContent = r.premio.emoji;
+  $("#resultName").textContent = r.premio.nome;
+  $("#resultRule").textContent = regra(r.premio.tipo);
+  $("#resultCode").textContent = r.codigo;
+  $("#resultWhats").href = linkWhats(r);
+  hubBtn.disabled = true;
+}
+
+let focoAnterior = null;
+function abrirModal(r) {
+  $("#modalEmoji").textContent = r.premio.emoji;
+  $("#modalHello").textContent = `Parabéns, ${r.nome}!`;
+  $("#modalPrize").textContent = r.premio.nome;
+  $("#modalRule").textContent = (r.premio.tipo === "brinde" ? "🎁 " : "🏷️ ") + regra(r.premio.tipo);
+  $("#modalCode").textContent = r.codigo;
+  $("#modalWhats").href = linkWhats(r);
+  $("#modalTiny").textContent = `Válido somente em ${CONFIG.dataCompleta}. Tire um print para garantir!`;
+  focoAnterior = document.activeElement;
+  modal.hidden = false;
+  requestAnimationFrame(() => modal.classList.add("show"));
+  setTimeout(() => $("#modalWhats").focus({ preventScroll: true }), 50);
+}
+
+function fecharModal() {
+  modal.classList.remove("show");
+  setTimeout(() => {
+    modal.hidden = true;
+    $("#resultCard").scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 250);
+  if (focoAnterior && focoAnterior.focus) focoAnterior.focus({ preventScroll: true });
+}
+
+/* ---------- Guardar no aparelho (1 giro por pessoa) ---------- */
+function salvar(r) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(r)); } catch (e) {}
+}
+function carregar() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch (e) { return null; }
+}
+
+/* ---------- Confete ---------- */
+function confete() {
+  const c = $("#confetti");
+  const ctx = c.getContext("2d");
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const w = window.innerWidth, h = window.innerHeight;
+  c.width = w * dpr;
+  c.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cores = ["#ff6a13", "#ffc83d", "#ffffff", "#25d366", "#ff9a3d"];
+  const n = reduceMotion ? 50 : 170;
+  const parts = Array.from({ length: n }, () => ({
+    x: w / 2 + (rand() - .5) * 120,
+    y: h * .38,
+    vx: (rand() - .5) * 16,
+    vy: -rand() * 15 - 4,
+    w: 6 + rand() * 6,
+    h: 9 + rand() * 8,
+    r: rand() * Math.PI,
+    vr: (rand() - .5) * .35,
+    c: cores[Math.floor(rand() * cores.length)],
+  }));
+  const dur = 4200, t0 = performance.now();
+  function frame(now) {
+    const el = now - t0;
+    ctx.clearRect(0, 0, w, h);
+    ctx.globalAlpha = Math.max(0, 1 - Math.max(0, el - dur * .6) / (dur * .4));
+    for (const p of parts) {
+      p.vy += .32;
+      p.vx *= .99;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.r += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.cos(p.r * 2));
+      ctx.restore();
+    }
+    if (el < dur) requestAnimationFrame(frame);
+    else ctx.clearRect(0, 0, w, h);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ---------- Início ---------- */
+function iniciar() {
+  montarRoleta();
+  ajustarTextos();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarTextos);
+
+  $("#rulesList").innerHTML = REGRAS.map((r) => `<li>${r}</li>`).join("");
+  $("#legendBrinde").textContent = `Brinde: compras acima de ${CONFIG.valorMinimoBrinde}`;
+  $("#footer").textContent = `© ${CONFIG.loja} · Ação válida somente em ${CONFIG.dataCompleta}`;
+
+  // Para testar de novo no mesmo aparelho: abra o site com ?reset=1 no final do endereço
+  const params = new URLSearchParams(location.search);
+  if (params.has("reset")) {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    history.replaceState(null, "", location.pathname);
+  }
+
+  const salvo = carregar();
+  if (salvo && salvo.premio) {
+    bloqueado = true;
+    const i = premios.findIndex((p) => p.roleta === salvo.premio.roleta);
+    if (i >= 0) {
+      rotation = -(i * SEG + SEG / 2);
+      setRotation(rotation);
+    }
+    mostrarResultado(salvo, true);
+  } else {
+    const agora = Date.now();
+    const antes = CONFIG.abreEm && agora < Date.parse(CONFIG.abreEm);
+    const depois = CONFIG.encerraEm && agora > Date.parse(CONFIG.encerraEm);
+    if (antes || depois) {
+      bloqueado = true;
+      hubBtn.disabled = true;
+      $("#playCard").hidden = true;
+      $("#closedCard").hidden = false;
+      if (antes) {
+        $("#closedTitle").textContent = "⏳ Quase lá!";
+        $("#closedText").textContent = `A roleta abre no dia ${CONFIG.dataCurta}. Volte aqui para girar e ganhar!`;
+      }
+    }
+  }
+
+  hubBtn.addEventListener("click", girar);
+  spinBtn.addEventListener("click", girar);
+  nomeInput.addEventListener("keydown", (e) => { if (e.key === "Enter") girar(); });
+  nomeInput.addEventListener("input", () => { if (nomeErro.textContent) nomeErro.textContent = ""; });
+  $("#modalClose").addEventListener("click", fecharModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) fecharModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modal.hidden) fecharModal(); });
+}
+
+iniciar();
+</script>
+</body>
+</html>
