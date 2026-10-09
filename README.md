@@ -38,7 +38,7 @@ Se dois descontos valerem para o mesmo produto, vale o maior (eles não se somam
 | 15% OFF | Todos os produtos Evorox (na compra atual) | 2 |
 | 20% OFF | Kit com 1 produto Evorox + 1 produto de qualquer outra marca (na compra atual) | 2 |
 | Brinde especial | Compras acima de R$ 100,00 | 2 |
-| Tente outra vez | Só enfeite: aparece na roleta, mas **nunca é sorteado** (`tipo: "tente"`) | 2 |
+| Não foi dessa vez | Só enfeite: aparece na roleta, mas **nunca é sorteado** (`tipo: "tente"`) | 2 |
 
 ## Testar
 
