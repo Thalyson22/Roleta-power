@@ -321,6 +321,7 @@
   }
   .slot-emoji { font-size: 24px; line-height: 1.1; }
   .slot-title { font-family: "Bebas Neue", Impact, sans-serif; font-size: 20px; line-height: 1; letter-spacing: .5px; color: #77778a; }
+  .nowrap { white-space: nowrap; }
   .slot-sub { color: #d6d6de; font-size: 10.5px; font-weight: 600; line-height: 1.2; letter-spacing: .3px; }
   .slot:not(.cheio) .slot-emoji { opacity: .45; filter: grayscale(.6); }
   .slot.cheio { border-style: solid; border-color: rgba(255, 200, 61, .45); background: rgba(255, 200, 61, .07); }
@@ -654,7 +655,7 @@ const CONFIG = {
 
   prefixoCodigo: "PWR1010",
 
-  // Giros por cliente. O cliente leva todos os prêmios e eles nunca se repetem.
+  // Giros por cliente. O cliente leva todos os prêmios que ganhar e eles nunca se repetem.
   giros: 3,
 
   // Quantas vezes cada prêmio aparece na roleta (2 = cada prêmio em 2 fatias, roleta mais cheia).
@@ -687,7 +688,7 @@ const REGRA_MAIOR = "Se dois descontos valerem para o mesmo produto, vale o maio
 
 const REGRAS = [
   GIROS > 1
-    ? `<b>${GIROS} giros por cliente, e você leva todos os prêmios!</b> Cada giro tira um prêmio diferente.`
+    ? `<b>${GIROS} giros por cliente, e você leva os ${GIROS} prêmios que ganhar!</b> Cada giro tira um prêmio diferente.`
     : `<b>1 giro por cliente.</b>`,
   `Os prêmios ficam vinculados ao seu número de WhatsApp (1 participação por número).`,
   `<b>Os descontos valem para a compra atual</b>, feita no dia ${CONFIG.dataCurta}, somente nos produtos indicados em cada prêmio.`,
@@ -915,6 +916,7 @@ function lerNome() {
 
 function girar() {
   if (spinning || bloqueado || faltam() <= 0) return;
+  if (sincronizar()) return;
   const h = horario();
   if (h) {
     encerrar(h);
@@ -926,6 +928,8 @@ function girar() {
     if (!nome) return;
   }
 
+  // giro iniciado por trás do modal (teclado): fecha o modal antes
+  if (modal.classList.contains("show")) fecharModal(null);
   spinning = true;
   hubBtn.disabled = spinBtn.disabled = nomeInput.disabled = true;
   wheelWrap.classList.add("spinning");
@@ -1004,7 +1008,15 @@ function atualizarPainel(animarUltimo) {
     const li = el("li", g ? "slot cheio" : "slot");
     if (g && animarUltimo && i === giros.length - 1) li.classList.add("novo");
     li.append(el("span", "slot-emoji", g ? g.premio.emoji : "🎁"), el("span", "slot-title", g ? g.premio.titulo : `${i + 1}º giro`));
-    if (g) li.append(el("span", "slot-sub", g.premio.textoRoleta));
+    if (g) {
+      // não quebra a linha dentro de "B-SLIM" nem logo depois do "+"
+      const sub = el("span", "slot-sub");
+      g.premio.textoRoleta.replace(/\+ /g, "+\u00a0").split(" ").forEach((w, j) => {
+        if (j) sub.append(" ");
+        sub.append(w.includes("-") ? el("span", "nowrap", w) : w);
+      });
+      li.append(sub);
+    }
     return li;
   }));
 
@@ -1012,7 +1024,7 @@ function atualizarPainel(animarUltimo) {
   $("#nomeBox").hidden = !!estado;
   spinBtn.textContent = !estado ? "Girar a roleta" : f === 1 ? "Girar a última vez" : "Girar de novo";
   $("#playHint").textContent = !estado
-    ? (GIROS > 1 ? `São ${GIROS} giros e você leva todos os prêmios! 🍀` : "1 giro por cliente. Boa sorte! 🍀")
+    ? (GIROS > 1 ? `São ${GIROS} giros e você leva os ${GIROS} prêmios que ganhar! 🍀` : "1 giro por cliente. Boa sorte! 🍀")
     : `Boa, ${estado.nome}! Ainda ${textoFaltam(f)}. Cada giro tira um prêmio diferente.`;
   const livre = !spinning && !bloqueado && f > 0;
   hubBtn.disabled = spinBtn.disabled = !livre;
@@ -1115,6 +1127,7 @@ function abrirModal(modo) {
 }
 
 function proximoPasso() {
+  if (spinning) return;
   if (faltam() > 0) {
     fecharModal(null);
     girar();
@@ -1134,6 +1147,35 @@ function fecharModal(destino) {
     if (destino) destino.scrollIntoView({ behavior: "smooth", block: "center" });
   }, 250);
   if (focoAnterior && focoAnterior.focus) focoAnterior.focus({ preventScroll: true });
+}
+
+// Deixa embaixo do ponteiro a fatia do último prêmio ganho
+function mostrarUltimaFatia() {
+  const ultimo = estado.giros[estado.giros.length - 1];
+  const i = premios.findIndex((p) => p.id === ultimo.premio.id);
+  const s = fatias[ultimo.fatia] === i ? ultimo.fatia : fatias.indexOf(i);
+  if (i >= 0 && s >= 0) {
+    rotation = -(s * SEG + SEG / 2);
+    setRotation(rotation);
+  }
+}
+
+// Outra aba do mesmo aparelho pode ter girado: passa a usar o que está salvo.
+// Retorna true se o estado mudou (aí o clique não gira).
+function sincronizar() {
+  const s = carregar();
+  if (!s || !s.nome || !s.codigo || !Array.isArray(s.giros) || !s.giros.length) return false;
+  if (estado && s.codigo === estado.codigo && s.giros.length <= estado.giros.length) return false;
+  estado = s;
+  mostrarUltimaFatia();
+  marcarGanhos();
+  if (faltam() <= 0) {
+    bloqueado = true;
+    mostrarResultado(true);
+  } else {
+    atualizarPainel(false);
+  }
+  return true;
 }
 
 /* ---------- Guardar no aparelho (1 participação por pessoa) ---------- */
@@ -1207,6 +1249,11 @@ function encerrar(h) {
   // quem já ganhou prêmios continua vendo e podendo enviar
   if (estado && estado.giros.length) {
     mostrarResultado(true);
+    if (estado.giros.length < GIROS) {
+      const titulo = estado.giros.length > 1 ? "Seus prêmios" : "Seu prêmio";
+      $("#resultEyebrow").textContent = `🔒 A ação foi encerrada, ${estado.nome}. ${titulo}:`;
+      $("#resultCard").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
     return;
   }
   $("#playCard").hidden = true;
@@ -1230,7 +1277,7 @@ function montarTextos() {
   $("#legend").replaceChildren(...chips.map((t) => el("span", "chip", t)));
 
   const maior = Math.max(0, ...premios.map((p) => parseInt(p.titulo, 10) || 0));
-  if (GIROS > 1) $("#lead").textContent = `São ${GIROS} giros e você leva todos os prêmios: descontos de até ${maior}%!`;
+  if (GIROS > 1) $("#lead").textContent = `São ${GIROS} giros e você leva os ${GIROS} prêmios que ganhar: descontos de até ${maior}%!`;
   else if (maior > 0) $("#lead").textContent = `Todo giro é premiado: descontos de até ${maior}% esperando por você.`;
   $("#footer").textContent = `© ${CONFIG.loja} · Ação válida somente em ${CONFIG.dataCompleta}`;
 }
@@ -1252,13 +1299,7 @@ function iniciar() {
   const salvo = carregar();
   if (salvo && salvo.nome && salvo.codigo && Array.isArray(salvo.giros) && salvo.giros.length) {
     estado = salvo;
-    const ultimo = estado.giros[estado.giros.length - 1];
-    const i = premios.findIndex((p) => p.id === ultimo.premio.id);
-    const s = fatias[ultimo.fatia] === i ? ultimo.fatia : fatias.indexOf(i);
-    if (i >= 0 && s >= 0) {
-      rotation = -(s * SEG + SEG / 2);
-      setRotation(rotation);
-    }
+    mostrarUltimaFatia();
     marcarGanhos();
   }
 
@@ -1280,6 +1321,7 @@ function iniciar() {
   $("#modalClose").addEventListener("click", () => fecharModal());
   modal.addEventListener("click", (e) => { if (e.target === modal) fecharModal(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modal.hidden) fecharModal(); });
+  window.addEventListener("storage", (e) => { if (e.key === STORAGE_KEY && !spinning) sincronizar(); });
 }
 
 iniciar();

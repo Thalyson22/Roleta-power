@@ -12,7 +12,7 @@ Tudo fica no arquivo `index.html`: não precisa instalar nada nem ter servidor.
 5. Cada aparelho participa uma vez. Quem sai no meio continua de onde parou; quem volta depois vê os prêmios que ganhou.
    O prêmio é salvo no começo de cada giro, então recarregar a página no meio do giro não dá uma nova chance.
 
-> O limite de 1 giro fica salvo no navegador. Quem limpar os dados ou usar aba anônima consegue girar de novo,
+> O limite de 1 participação (3 giros) fica salvo no navegador. Quem limpar os dados ou usar aba anônima consegue participar de novo,
 > então confira no atendimento: **1 participação por número de WhatsApp**.
 
 ## O que editar (no começo do `<script>` do `index.html`, bloco `CONFIG`)
@@ -23,7 +23,7 @@ Tudo fica no arquivo `index.html`: não precisa instalar nada nem ter servidor.
 | `premios` | Lista de prêmios: `titulo` (ex.: `10% OFF`), `textoRoleta` (texto curto da fatia), `detalhe` (onde o desconto vale), emoji, tipo e `chance` |
 | `giros` | Giros por cliente (hoje 3). Os prêmios não se repetem |
 | `fatiasPorPremio` | Quantas vezes cada prêmio aparece na roleta (hoje 2, ou seja, 10 fatias) |
-| `abreEm` / `encerraEm` | Horários em que a roleta abre e fecha. Depois de `encerraEm` aparece "Ação encerrada" |
+| `abreEm` / `encerraEm` | Horários em que a roleta abre e fecha. Depois de `encerraEm` aparece "Ação encerrada" (quem já tinha girado continua vendo os prêmios) |
 | `REGRAS` | Textos da seção "Regras da ação" |
 
 As cores ficam no topo do `<style>`, em `:root` (`--brand`, `--gold` etc.).
