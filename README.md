@@ -20,9 +20,9 @@ Tudo fica no arquivo `index.html`: não precisa instalar nada nem ter servidor.
 | Campo | O que é |
 |---|---|
 | `whatsapp` | Número da Power só com dígitos, com 55 + DDD. Ex.: `"5511987654321"` |
-| `premios` | Lista de prêmios: `titulo` (ex.: `10% OFF`), `textoRoleta` (texto curto da fatia), `detalhe` (onde o desconto vale), emoji, tipo e `chance` |
+| `premios` | Lista de prêmios: `titulo` (ex.: `10% OFF`), `tituloRoleta` (opcional, texto grande da fatia), `textoRoleta` (texto curto da fatia), `detalhe` (onde vale), emoji, `tipo` (`desconto`, `brinde` ou `tente`) e `chance` |
 | `giros` | Giros por cliente (hoje 3). Os prêmios não se repetem |
-| `fatiasPorPremio` | Quantas vezes cada prêmio aparece na roleta (hoje 2, ou seja, 10 fatias) |
+| `fatiasPorPremio` | Quantas vezes cada item aparece na roleta (hoje 2, ou seja, 8 fatias) |
 | `abreEm` / `encerraEm` | Opcional: horários para a roleta abrir e fechar sozinha. Hoje os dois estão `null`, ou seja, a roleta fica sempre aberta. Se usar `encerraEm`, depois dele aparece "Ação encerrada" (quem já tinha girado continua vendo os prêmios) |
 | `REGRAS` | Textos da seção "Regras da ação" |
 
@@ -30,17 +30,15 @@ As cores ficam no topo do `<style>`, em `:root` (`--brand`, `--gold` etc.).
 
 ### Prêmios atuais
 
-Todos são descontos que valem na compra atual, só nos produtos indicados.
+Com 3 giros sem repetir e 3 prêmios sorteáveis, todo cliente ganha os 3 prêmios (a ordem é que muda).
 Se dois descontos valerem para o mesmo produto, vale o maior (eles não se somam).
-Com 3 giros sem repetir e chances iguais, cada prêmio sai para 60% dos clientes.
 
-| Prêmio | Onde vale | Peso (`chance`) |
+| Prêmio | Onde vale | Fatias |
 |---|---|---|
-| 10% OFF | Todos os coffees funcionais | 20% |
-| 15% OFF | Todos os produtos Evorox | 20% |
-| 10% OFF | Qualquer pré-treino | 20% |
-| 20% OFF | Kit com 1 produto Evorox + 1 produto de qualquer outra marca | 20% |
-| 10% OFF | Kit B-Fire + B-Slim | 20% |
+| 15% OFF | Todos os produtos Evorox (na compra atual) | 2 |
+| 20% OFF | Kit com 1 produto Evorox + 1 produto de qualquer outra marca (na compra atual) | 2 |
+| Brinde especial | Compras acima de R$ 100,00 | 2 |
+| Tente outra vez | Só enfeite: aparece na roleta, mas **nunca é sorteado** (`tipo: "tente"`) | 2 |
 
 ## Testar
 
